@@ -1,4 +1,4 @@
-package com.comp2042;
+package logic;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

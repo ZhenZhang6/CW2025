@@ -1,4 +1,7 @@
-package com.comp2042;
+package logic;
+
+import model.Score;
+import model.ViewData;
 
 public interface Board {
 

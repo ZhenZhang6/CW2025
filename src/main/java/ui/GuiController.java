@@ -1,5 +1,11 @@
-package com.comp2042;
+package ui;
 
+import model.DownData;
+import model.ViewData;
+import controller.EventSource;
+import controller.EventType;
+import controller.InputEventListener;
+import controller.MoveEvent;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;

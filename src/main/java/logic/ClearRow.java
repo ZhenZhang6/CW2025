@@ -1,4 +1,4 @@
-package com.comp2042;
+package logic;
 
 public final class ClearRow {
 

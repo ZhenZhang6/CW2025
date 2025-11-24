@@ -1,8 +1,15 @@
-package com.comp2042;
+package controller;
+
+import logic.Board;
+import logic.ClearRow;
+import logic.GameBoard;
+import model.DownData;
+import model.ViewData;
+import ui.GuiController;
 
 public class GameController implements InputEventListener {
 
-    private Board board = new SimpleBoard(25, 10);
+    private Board board = new GameBoard(25, 10);
 
     private final GuiController viewGuiController;
 

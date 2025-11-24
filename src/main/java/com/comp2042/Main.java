@@ -1,10 +1,12 @@
 package com.comp2042;
 
+import controller.GameController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import ui.GuiController;
 
 import java.net.URL;
 import java.util.ResourceBundle;
