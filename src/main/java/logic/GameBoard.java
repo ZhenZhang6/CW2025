@@ -19,6 +19,11 @@ public class GameBoard implements Board {
     private final BrickGenerator brickGenerator;
     private final BrickRotator brickRotator;
     private final CollisionDetector collisionDetector;
+    private final MergeEngine mergeEngine;
+    private final RowClearManager rowClearManager;
+    private final SpawnManager spawnManager;
+    private final RotateManager rotateManager;
+
 
     private BoardState boardState;
     private Point currentOffset;
@@ -34,6 +39,12 @@ public class GameBoard implements Board {
         this.brickGenerator = new RandomBrickGenerator();
         this.brickRotator = new BrickRotator();
         this.collisionDetector = new CollisionDetector();
+        this.mergeEngine = new MergeEngine();
+        this.rowClearManager = new RowClearManager();
+        this.spawnManager = new SpawnManager();
+        this.rotateManager = new RotateManager();
+
+
         this.score = new Score();
 
         newGame();
@@ -68,24 +79,24 @@ public class GameBoard implements Board {
 
     @Override
     public boolean rotateLeftBrick() {
-        NextShapeInfo next = brickRotator.getNextShape();
-
-        if (!collisionDetector.canRotate(boardState, brickRotator, currentOffset, next.getShape())) {
-            return false;
-        }
-
-        brickRotator.setCurrentShape(next.getPosition());
-        return true;
+        return rotateManager.rotate(
+                boardState,
+                brickRotator,
+                collisionDetector,
+                currentOffset
+        );
     }
 
     @Override
     public boolean createNewBrick() {
-        Brick brick = brickGenerator.getBrick();
-        brickRotator.setBrick(brick);
-
-        currentOffset = new Point(4, 10);
-
-        return collisionDetector.isSpawnConflict(boardState, brickRotator, currentOffset);
+        currentOffset = new Point();
+        return spawnManager.spawn(
+                boardState,
+                brickGenerator,
+                brickRotator,
+                collisionDetector,
+                currentOffset
+        );
     }
 
     @Override
@@ -105,7 +116,7 @@ public class GameBoard implements Board {
 
     @Override
     public void mergeBrickToBackground() {
-        int[][] newMatrix = MatrixOperations.merge(
+        int[][] newMatrix = mergeEngine.merge(
                 boardState.getMatrix(),
                 brickRotator.getCurrentShape(),
                 currentOffset.x,
@@ -123,9 +134,10 @@ public class GameBoard implements Board {
 
     @Override
     public ClearRow clearRows() {
-        ClearRow clearRow = MatrixOperations.checkRemoving(boardState.getMatrix());
-        replaceMatrix(clearRow.getNewMatrix());
-        return clearRow;
+        ClearRow result = rowClearManager.clear(boardState.getMatrix());
+        replaceMatrix(result.getNewMatrix());
+        score.add(result.getScoreBonus());
+        return result;
     }
 
     @Override
