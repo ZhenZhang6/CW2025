@@ -1,3 +1,8 @@
+/**
+ * Manages rotation of the active brick.
+ * Retrieves the next rotation state and checks whether the rotation
+ * is allowed before applying it.
+ */
 package logic;
 
 import com.comp2042.logic.bricks.BrickRotator;

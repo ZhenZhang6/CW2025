@@ -1,3 +1,7 @@
+/**
+ * Performs collision checks for movement, rotation, and spawning.
+ * Ensures that actions are valid before the board state is modified.
+ */
 package logic;
 
 import com.comp2042.logic.bricks.BrickRotator;

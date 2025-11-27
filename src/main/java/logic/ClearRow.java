@@ -1,3 +1,8 @@
+/**
+ * Immutable result object representing the outcome of row-clearing.
+ * Contains the number of removed lines, the updated board matrix,
+ * and any score bonus produced by the clear.
+ */
 package logic;
 
 public final class ClearRow {

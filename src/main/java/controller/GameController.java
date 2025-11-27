@@ -1,3 +1,8 @@
+/**
+ * Coordinates the game flow between the view (UI) and the game logic.
+ * Uses InputManager to interpret user input and delegates actions
+ * to GameBoard.
+ */
 package controller;
 
 import logic.Board;
@@ -12,6 +17,8 @@ public class GameController implements InputEventListener {
     private Board board = new GameBoard(25, 10);
 
     private final GuiController viewGuiController;
+
+    private final InputManager inputManager = new InputManager();
 
     public GameController(GuiController c) {
         viewGuiController = c;
@@ -47,21 +54,40 @@ public class GameController implements InputEventListener {
 
     @Override
     public ViewData onLeftEvent(MoveEvent event) {
-        board.moveBrickLeft();
-        return board.getViewData();
+        return handleInput(event);
     }
 
     @Override
     public ViewData onRightEvent(MoveEvent event) {
-        board.moveBrickRight();
-        return board.getViewData();
+        return handleInput(event);
     }
 
     @Override
     public ViewData onRotateEvent(MoveEvent event) {
-        board.rotateLeftBrick();
+        return handleInput(event);
+    }
+
+    private ViewData handleInput(MoveEvent event) {
+
+        InputManager.Action action = inputManager.mapEvent(event);
+
+        switch (action) {
+            case MOVE_LEFT:
+                board.moveBrickLeft();
+                break;
+            case MOVE_RIGHT:
+                board.moveBrickRight();
+                break;
+            case ROTATE:
+                board.rotateLeftBrick();
+                break;
+            default:
+                break;
+        }
+
         return board.getViewData();
     }
+
 
     @Override
     public void createNewGame() {

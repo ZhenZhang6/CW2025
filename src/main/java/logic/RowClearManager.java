@@ -1,3 +1,8 @@
+/**
+ * Detects and removes full rows from the board.
+ * Returns a ClearRow object containing the updated matrix
+ * and the number of cleared lines.
+ */
 package logic;
 
 public class RowClearManager {

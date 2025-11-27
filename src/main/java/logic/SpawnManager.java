@@ -1,3 +1,7 @@
+/**
+ * Creates and positions a new falling brick.
+ * Also performs spawn collision checks to detect game-over conditions.
+ */
 package logic;
 
 import com.comp2042.logic.bricks.Brick;

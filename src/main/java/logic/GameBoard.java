@@ -1,3 +1,11 @@
+/**
+ * Central game logic manager.
+ * Delegates all major gameplay operations (movement, rotation,
+ * spawning, merging, clearing) to dedicated manager classes.
+ * Keeps track of the active brick's offset and board state only.
+ * This structure improves modularity and maintainability compared
+ * to the original monolithic implementation.
+ */
 package logic;
 
 import com.comp2042.logic.bricks.Brick;
@@ -23,6 +31,7 @@ public class GameBoard implements Board {
     private final RowClearManager rowClearManager;
     private final SpawnManager spawnManager;
     private final RotateManager rotateManager;
+    private final MoveManager moveManager;
 
 
     private BoardState boardState;
@@ -43,6 +52,7 @@ public class GameBoard implements Board {
         this.rowClearManager = new RowClearManager();
         this.spawnManager = new SpawnManager();
         this.rotateManager = new RotateManager();
+        this.moveManager = new MoveManager();
 
 
         this.score = new Score();
@@ -52,29 +62,17 @@ public class GameBoard implements Board {
 
     @Override
     public boolean moveBrickDown() {
-        if (!collisionDetector.canMove(boardState, brickRotator, currentOffset, 0, 1)) {
-            return false;
-        }
-        currentOffset.translate(0, 1);
-        return true;
+        return moveManager.move(boardState, brickRotator, currentOffset, 0, 1);
     }
 
     @Override
     public boolean moveBrickLeft() {
-        if (!collisionDetector.canMove(boardState, brickRotator, currentOffset, -1, 0)) {
-            return false;
-        }
-        currentOffset.translate(-1, 0);
-        return true;
+        return moveManager.move(boardState, brickRotator, currentOffset, -1, 0);
     }
 
     @Override
     public boolean moveBrickRight() {
-        if (!collisionDetector.canMove(boardState, brickRotator, currentOffset, 1, 0)) {
-            return false;
-        }
-        currentOffset.translate(1, 0);
-        return true;
+        return moveManager.move(boardState, brickRotator, currentOffset, 1, 0);
     }
 
     @Override

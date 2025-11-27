@@ -1,3 +1,8 @@
+/**
+ * Stores and manages the game board's matrix.
+ * Holds only state and does not perform gameplay logic.
+ * Other components read or update the matrix through this class.
+ */
 package model;
 
 public class BoardState {
