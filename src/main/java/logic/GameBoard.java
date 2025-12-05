@@ -13,7 +13,6 @@ import com.comp2042.logic.bricks.BrickGenerator;
 import com.comp2042.logic.bricks.BrickRotator;
 import com.comp2042.logic.bricks.RandomBrickGenerator;
 import model.BoardState;
-import model.NextShapeInfo;
 import model.Score;
 import model.ViewData;
 
@@ -32,7 +31,6 @@ public class GameBoard implements Board {
     private final SpawnManager spawnManager;
     private final RotateManager rotateManager;
     private final MoveManager moveManager;
-
 
     private BoardState boardState;
     private Point currentOffset;
@@ -53,7 +51,6 @@ public class GameBoard implements Board {
         this.spawnManager = new SpawnManager();
         this.rotateManager = new RotateManager();
         this.moveManager = new MoveManager();
-
 
         this.score = new Score();
 
@@ -150,3 +147,4 @@ public class GameBoard implements Board {
         createNewBrick();
     }
 }
+

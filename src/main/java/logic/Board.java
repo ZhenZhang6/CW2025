@@ -2,6 +2,7 @@ package logic;
 
 import model.Score;
 import model.ViewData;
+import model.NextShapeInfo;
 
 public interface Board {
 
@@ -26,4 +27,5 @@ public interface Board {
     Score getScore();
 
     void newGame();
+
 }

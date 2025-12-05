@@ -1,8 +1,3 @@
-/**
- * Coordinates the game flow between the view (UI) and the game logic.
- * Uses InputManager to interpret user input and delegates actions
- * to GameBoard.
- */
 package controller;
 
 import logic.Board;
@@ -30,27 +25,47 @@ public class GameController implements InputEventListener {
 
     @Override
     public DownData onDownEvent(MoveEvent event) {
+
         boolean canMove = board.moveBrickDown();
         ClearRow clearRow = null;
+
+        // ============================
+        // 方块不能再下落 → 落地逻辑
+        // ============================
         if (!canMove) {
+
+            // 合并到背景
             board.mergeBrickToBackground();
+
+            // 消行（只在 Board 内部更新分数，不在这里重复加）
             clearRow = board.clearRows();
-            if (clearRow.getLinesRemoved() > 0) {
-                board.getScore().add(clearRow.getScoreBonus());
-            }
-            if (board.createNewBrick()) {
-                viewGuiController.gameOver();
-            }
 
-            viewGuiController.refreshGameBackground(board.getBoardMatrix());
-
-        } else {
+            // soft drop 只在“按下键”导致落地时 +1 分
             if (event.getEventSource() == EventSource.USER) {
                 board.getScore().add(1);
             }
+
+            // 刷新背景
+            viewGuiController.refreshGameBackground(board.getBoardMatrix());
+
+            // 尝试生成下一块
+            boolean spawnConflict = board.createNewBrick();
+
+            // 刷新新砖显示
+            viewGuiController.refreshBrick(board.getViewData());
+
+            if (spawnConflict) {
+                viewGuiController.gameOver();
+            }
+
+        } else {
+            // 正常下落，不加分
         }
+
         return new DownData(clearRow, board.getViewData());
     }
+
+
 
     @Override
     public ViewData onLeftEvent(MoveEvent event) {
@@ -95,4 +110,3 @@ public class GameController implements InputEventListener {
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
     }
 }
-
