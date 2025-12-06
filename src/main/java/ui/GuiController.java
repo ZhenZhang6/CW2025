@@ -2,6 +2,7 @@ package ui;
 
 import model.DownData;
 import model.ViewData;
+import model.NextShapeInfo;
 import controller.EventSource;
 import controller.EventType;
 import controller.InputEventListener;
@@ -36,26 +37,18 @@ public class GuiController implements Initializable {
     private static final int BRICK_SIZE = 28;
     private static final int HIDDEN_ROWS = 2;
 
-    @FXML
-    private GridPane gamePanel;
+    @FXML private GridPane gamePanel;
+    @FXML private Group groupNotification;
+    @FXML private GridPane brickPanel;
+    @FXML private GameOverPanel gameOverPanel;
 
-    @FXML
-    private Group groupNotification;
+    @FXML private Button pauseButton;
+    @FXML private Button restartButton;
 
-    @FXML
-    private GridPane brickPanel;
+    @FXML private Label scoreLabel;
 
-    @FXML
-    private GameOverPanel gameOverPanel;
-
-    @FXML
-    private Button pauseButton;
-
-    @FXML
-    private Button restartButton;
-
-    @FXML
-    private Label scoreLabel;
+    // 显示下一块
+    @FXML private GridPane nextPreview;
 
     private Rectangle[][] displayMatrix;
     private Rectangle[][] rectangles;
@@ -65,6 +58,13 @@ public class GuiController implements Initializable {
 
     private final BooleanProperty isPause = new SimpleBooleanProperty(false);
     private final BooleanProperty isGameOver = new SimpleBooleanProperty(false);
+
+    @FXML private Label linesLabel;
+
+    public void updateLines(int totalLines) {
+        linesLabel.setText("Lines: " + totalLines);
+    }
+
 
 
     @Override
@@ -87,17 +87,20 @@ public class GuiController implements Initializable {
                 if (!isPause.get() && !isGameOver.get()) {
 
                     if (keyEvent.getCode() == KeyCode.LEFT || keyEvent.getCode() == KeyCode.A) {
-                        refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)));
+                        refreshBrick(eventListener.onLeftEvent(
+                                new MoveEvent(EventType.LEFT, EventSource.USER)));
                         keyEvent.consume();
                     }
 
                     if (keyEvent.getCode() == KeyCode.RIGHT || keyEvent.getCode() == KeyCode.D) {
-                        refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)));
+                        refreshBrick(eventListener.onRightEvent(
+                                new MoveEvent(EventType.RIGHT, EventSource.USER)));
                         keyEvent.consume();
                     }
 
                     if (keyEvent.getCode() == KeyCode.UP || keyEvent.getCode() == KeyCode.W) {
-                        refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER)));
+                        refreshBrick(eventListener.onRotateEvent(
+                                new MoveEvent(EventType.ROTATE, EventSource.USER)));
                         keyEvent.consume();
                     }
 
@@ -212,7 +215,8 @@ public class GuiController implements Initializable {
             DownData downData = eventListener.onDownEvent(event);
 
             if (downData.getClearRow() != null && downData.getClearRow().getLinesRemoved() > 0) {
-                NotificationPanel notificationPanel = new NotificationPanel("+" + downData.getClearRow().getScoreBonus());
+                NotificationPanel notificationPanel =
+                        new NotificationPanel("+" + downData.getClearRow().getScoreBonus());
                 groupNotification.getChildren().add(notificationPanel);
                 notificationPanel.showScore(groupNotification.getChildren());
             }
@@ -277,5 +281,54 @@ public class GuiController implements Initializable {
 
     public void pauseGame(ActionEvent actionEvent) {
         gamePanel.requestFocus();
+    }
+
+    // ★★★★★ 新增：根据消行数量调整下落速度 ★★★★★
+    public void updateFallSpeed(int totalLines) {
+
+        int base = 400;                    // 初始速度
+        int reduce = (totalLines / 5) * 30; // 每 5 行加快 30ms
+        int newSpeed = Math.max(120, base - reduce); // 最低 120ms
+
+        // 停旧的
+        if (timeLine != null) {
+            timeLine.stop();
+        }
+
+        // 重新创建 timeline
+        timeLine = new Timeline(new KeyFrame(
+                Duration.millis(newSpeed),
+                ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
+        ));
+
+        timeLine.setCycleCount(Timeline.INDEFINITE);
+
+        if (!isPause.get() && !isGameOver.get()) {
+            timeLine.play();
+        }
+
+        System.out.println("速度更新：" + newSpeed + "ms | 共消行：" + totalLines);
+    }
+
+
+
+    // 显示下一块方块
+    public void updateNextPiece(NextShapeInfo nextInfo) {
+        if (nextPreview == null) return;
+
+        nextPreview.getChildren().clear();
+        int[][] shape = nextInfo.getShape();
+
+        for (int i = 0; i < shape.length; i++) {
+            for (int j = 0; j < shape[i].length; j++) {
+
+                Rectangle r = new Rectangle(20, 20);
+                r.setFill(getFillColor(shape[i][j]));
+                r.setArcHeight(6);
+                r.setArcWidth(6);
+
+                nextPreview.add(r, j, i);
+            }
+        }
     }
 }

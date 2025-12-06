@@ -14,9 +14,12 @@
 
     <BorderPane styleClass="gameBoard" fx:id="gameBoard">
         <center>
-            <GridPane fx:id="gamePanel" hgap="1" vgap="1" layoutY="30" layoutX="40"/>
+            <GridPane fx:id="gamePanel"
+                      hgap="1" vgap="1"
+                      layoutY="30" layoutX="40"/>
         </center>
     </BorderPane>
+
     <Button fx:id="pauseButton"
             text="Pause"
             layoutX="350" layoutY="30"
@@ -31,14 +34,33 @@
 
     <Label fx:id="scoreLabel"
            text="Score: 0"
-           layoutX="350"
-           layoutY="120"
+           layoutX="350" layoutY="120"
            styleClass="score-board"/>
 
-    <Group fx:id="groupNotification" layoutX="14" layoutY="203">
+    <Label fx:id="linesLabel"
+           text="Lines: 0"
+           layoutX="350" layoutY="160"
+           styleClass="score-board"/>
+
+
+    <BorderPane layoutX="320" layoutY="220" styleClass="next-box">
+        <center>
+            <GridPane fx:id="nextPreview"
+                      hgap="0" vgap="0"
+                      styleClass="next-preview-grid"/>
+        </center>
+    </BorderPane>
+
+
+
+
+    <Group fx:id="groupNotification"
+           layoutX="14" layoutY="203">
+
         <VBox alignment="CENTER">
             <GameOverPanel fx:id="gameOverPanel"/>
         </VBox>
+
     </Group>
 
     <stylesheets>

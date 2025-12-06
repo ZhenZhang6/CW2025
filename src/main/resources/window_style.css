@@ -117,3 +117,22 @@
 
     -fx-effect: dropshadow(gaussian, #00eaff, 12, 0.4, 0, 0);
 }
+
+.next-box {
+    -fx-padding: 12;
+    -fx-background-color: rgba(0, 20, 40, 0.55); /* 深太空蓝 */
+    -fx-border-color: #4fd8ff;                  /* 柔和的 HUD 蓝 */
+    -fx-border-width: 2.5;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+
+    -fx-effect: dropshadow(gaussian, rgba(79,216,255,0.5), 18, 0.4, 0, 0);
+}
+
+.next-preview-grid {
+    -fx-padding: 10;          /* 给点空隙 */
+    -fx-alignment: center;     /* 让里面的方块居中 */
+    -fx-min-width: 120;
+    -fx-min-height: 120;
+}
+
