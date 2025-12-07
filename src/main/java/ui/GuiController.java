@@ -46,8 +46,11 @@ public class GuiController implements Initializable {
     @FXML private Button restartButton;
 
     @FXML private Label scoreLabel;
+    @FXML private Label linesLabel;
 
-    // 显示下一块
+    @FXML private Label highScoreLabel;
+    private int highestScore = 0;
+
     @FXML private GridPane nextPreview;
 
     private Rectangle[][] displayMatrix;
@@ -59,13 +62,16 @@ public class GuiController implements Initializable {
     private final BooleanProperty isPause = new SimpleBooleanProperty(false);
     private final BooleanProperty isGameOver = new SimpleBooleanProperty(false);
 
-    @FXML private Label linesLabel;
-
     public void updateLines(int totalLines) {
         linesLabel.setText("Lines: " + totalLines);
     }
 
-
+    public void updateHighestScore(int score) {
+        if (score > highestScore) {
+            highestScore = score;
+            highScoreLabel.setText("Highest: " + highestScore);
+        }
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -124,7 +130,6 @@ public class GuiController implements Initializable {
         reflection.setTopOffset(-12);
     }
 
-
     public void initGameView(int[][] boardMatrix, ViewData brick) {
 
         displayMatrix = new Rectangle[boardMatrix.length][boardMatrix[0].length];
@@ -164,7 +169,6 @@ public class GuiController implements Initializable {
         timeLine.play();
     }
 
-
     private Paint getFillColor(int i) {
         return switch (i) {
             case 0 -> Color.TRANSPARENT;
@@ -185,7 +189,6 @@ public class GuiController implements Initializable {
         rectangle.setArcWidth(9);
     }
 
-
     public void refreshBrick(ViewData brick) {
         if (!isPause.get()) {
             brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * BRICK_SIZE);
@@ -199,7 +202,6 @@ public class GuiController implements Initializable {
         }
     }
 
-
     public void refreshGameBackground(int[][] board) {
         for (int i = HIDDEN_ROWS; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
@@ -207,7 +209,6 @@ public class GuiController implements Initializable {
             }
         }
     }
-
 
     private void moveDown(MoveEvent event) {
 
@@ -227,11 +228,9 @@ public class GuiController implements Initializable {
         gamePanel.requestFocus();
     }
 
-
     public void setEventListener(InputEventListener eventListener) {
         this.eventListener = eventListener;
     }
-
 
     public void togglePause(ActionEvent event) {
 
@@ -249,7 +248,6 @@ public class GuiController implements Initializable {
         }
     }
 
-
     public void restartGame(ActionEvent event) {
 
         timeLine.stop();
@@ -266,11 +264,9 @@ public class GuiController implements Initializable {
         gamePanel.requestFocus();
     }
 
-
     public void bindScore(IntegerProperty scoreProperty) {
         scoreLabel.textProperty().bind(scoreProperty.asString("Score: %d"));
     }
-
 
     public void gameOver() {
         timeLine.stop();
@@ -278,24 +274,20 @@ public class GuiController implements Initializable {
         isGameOver.set(true);
     }
 
-
     public void pauseGame(ActionEvent actionEvent) {
         gamePanel.requestFocus();
     }
 
-    // ★★★★★ 新增：根据消行数量调整下落速度 ★★★★★
     public void updateFallSpeed(int totalLines) {
 
-        int base = 400;                    // 初始速度
-        int reduce = (totalLines / 5) * 30; // 每 5 行加快 30ms
-        int newSpeed = Math.max(120, base - reduce); // 最低 120ms
+        int base = 400;
+        int reduce = (totalLines / 5) * 20;
+        int newSpeed = Math.max(180, base - reduce);
 
-        // 停旧的
         if (timeLine != null) {
             timeLine.stop();
         }
 
-        // 重新创建 timeline
         timeLine = new Timeline(new KeyFrame(
                 Duration.millis(newSpeed),
                 ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
@@ -306,13 +298,8 @@ public class GuiController implements Initializable {
         if (!isPause.get() && !isGameOver.get()) {
             timeLine.play();
         }
-
-        System.out.println("速度更新：" + newSpeed + "ms | 共消行：" + totalLines);
     }
 
-
-
-    // 显示下一块方块
     public void updateNextPiece(NextShapeInfo nextInfo) {
         if (nextPreview == null) return;
 

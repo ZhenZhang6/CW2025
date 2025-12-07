@@ -14,11 +14,13 @@ public class GameController implements InputEventListener {
     private final GuiController viewGuiController;
     private final InputManager inputManager = new InputManager();
 
-    // ★ 新增：总消行数
     private int totalLines = 0;
 
     public GameController(GuiController c) {
         viewGuiController = c;
+
+        board.getScore().loadHighScore();
+        viewGuiController.updateHighestScore(board.getScore().getHighScore());
 
         board.createNewBrick();
         viewGuiController.setEventListener(this);
@@ -26,7 +28,6 @@ public class GameController implements InputEventListener {
         viewGuiController.initGameView(board.getBoardMatrix(), board.getViewData());
         viewGuiController.bindScore(board.getScore().scoreProperty());
 
-        // 下一块
         viewGuiController.updateNextPiece(board.getNextShapeInfo());
     }
 
@@ -43,33 +44,30 @@ public class GameController implements InputEventListener {
             clearRow = board.clearRows();
             viewGuiController.updateLines(board.getScore().getTotalLines());
 
-
-            // 若消行，累计
             if (clearRow.getLinesRemoved() > 0) {
                 totalLines += clearRow.getLinesRemoved();
 
-                // 通知 GUI 更新掉落速度
                 viewGuiController.updateFallSpeed(totalLines);
             }
 
-            // soft drop +1
             if (event.getEventSource() == EventSource.USER) {
                 board.getScore().add(1);
             }
 
-            // 刷新背景
+            board.getScore().updateHighScore(board.getScore().getScore());
+            viewGuiController.updateHighestScore(board.getScore().getHighScore());
+
             viewGuiController.refreshGameBackground(board.getBoardMatrix());
 
-            // 生成下一块
             boolean spawnConflict = board.createNewBrick();
 
-            // 刷新当前方块
             viewGuiController.refreshBrick(board.getViewData());
 
-            // 刷新 next piece
             viewGuiController.updateNextPiece(board.getNextShapeInfo());
 
             if (spawnConflict) {
+                board.getScore().updateHighScore(board.getScore().getScore());
+                viewGuiController.updateHighestScore(board.getScore().getHighScore());
                 viewGuiController.gameOver();
             }
         }
@@ -102,16 +100,21 @@ public class GameController implements InputEventListener {
             case ROTATE -> board.rotateLeftBrick();
         }
 
+        board.getScore().updateHighScore(board.getScore().getScore());
+        viewGuiController.updateHighestScore(board.getScore().getHighScore());
+
         return board.getViewData();
     }
 
     @Override
     public void createNewGame() {
         board.newGame();
-        totalLines = 0; // 重置
+        totalLines = 0;
+
+        viewGuiController.updateHighestScore(board.getScore().getHighScore());
 
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
         viewGuiController.updateNextPiece(board.getNextShapeInfo());
-        viewGuiController.updateFallSpeed(0); // 恢复初始速度
+        viewGuiController.updateFallSpeed(0);
     }
 }

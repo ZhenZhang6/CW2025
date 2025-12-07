@@ -36,7 +36,6 @@ public class GameBoard implements Board {
     private BoardState boardState;
     private Point currentOffset;
 
-    // ★ 新增：管理当前 + 下一块
     private Brick currentBrick;
     private Brick nextBrick;
 
@@ -59,7 +58,6 @@ public class GameBoard implements Board {
 
         this.score = new Score();
 
-        // ★ 初始化 next brick
         this.nextBrick = brickGenerator.getBrick();
 
         newGame();
@@ -91,25 +89,18 @@ public class GameBoard implements Board {
         );
     }
 
-    // ========================
-    // ★ Spawn 使用 nextBrick 系统
-    // ========================
+
     @Override
     public boolean createNewBrick() {
 
-        // 当前砖等于 next
         currentBrick = nextBrick;
 
-        // 再生成新的下一块
         nextBrick = brickGenerator.getBrick();
 
-        // 设置到 rotator
         brickRotator.setBrick(currentBrick);
 
-        // 初始 offset（你原来 spawnManager 默认是 (4,10)）
         currentOffset = new Point(4, 10);
 
-        // 是否立即冲突（game over）
         return collisionDetector.isSpawnConflict(boardState, brickRotator, currentOffset);
     }
 
@@ -124,7 +115,7 @@ public class GameBoard implements Board {
                 brickRotator.getCurrentShape(),
                 currentOffset.x,
                 currentOffset.y,
-                nextBrick.getShapeMatrix().get(0) // ★ 返回下一块
+                nextBrick.getShapeMatrix().get(0)
         );
     }
 
@@ -165,21 +156,17 @@ public class GameBoard implements Board {
         boardState.reset();
         score.reset();
 
-        // 重置 current，但 next 已经提前生成
         currentBrick = null;
 
-        // 创建第一块（使用 nextBrick）
         createNewBrick();
     }
 
-    // =============================
-    // ★ GUI: 用来显示下一个方块
-    // =============================
+
     @Override
     public NextShapeInfo getNextShapeInfo() {
         return new NextShapeInfo(
                 nextBrick.getShapeMatrix().get(0),
-                0   // 位置你不需要，用不到
+                0
         );
     }
 }
