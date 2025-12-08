@@ -383,4 +383,20 @@ public class GuiController implements Initializable {
             }
         }
     }
+    @FXML
+    private void returnToMenu(ActionEvent event) {
+        try {
+            javafx.fxml.FXMLLoader loader =
+                    new javafx.fxml.FXMLLoader(getClass().getClassLoader().getResource("StartScreen.fxml"));
+
+            javafx.scene.Parent root = loader.load();
+
+            javafx.stage.Stage stage = (javafx.stage.Stage) gamePanel.getScene().getWindow();
+            stage.setScene(new javafx.scene.Scene(root, 500, 700));
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

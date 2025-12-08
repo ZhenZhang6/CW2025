@@ -14,7 +14,6 @@ public class RandomBrickGenerator implements BrickGenerator {
     public RandomBrickGenerator() {
         brickList = new ArrayList<>();
 
-        // Normal bricks
         brickList.add(new IBrick());
         brickList.add(new JBrick());
         brickList.add(new LBrick());
@@ -29,7 +28,7 @@ public class RandomBrickGenerator implements BrickGenerator {
     }
 
     private Brick generateRandomBrick() {
-        int rand = ThreadLocalRandom.current().nextInt(10); // 0~9
+        int rand = ThreadLocalRandom.current().nextInt(10);
 
         if (rand == 0) {
             return new BombBrick();

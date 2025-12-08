@@ -59,6 +59,13 @@
         </center>
     </BorderPane>
 
+    <Button fx:id="returnButton"
+            text="Return"
+            layoutX="335" layoutY="600"
+            onAction="#returnToMenu"
+            styleClass="menu-btn"/>
+
+
     <Group fx:id="groupNotification"
            layoutX="14" layoutY="203">
 
