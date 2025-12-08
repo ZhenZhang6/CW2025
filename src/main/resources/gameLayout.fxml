@@ -45,15 +45,19 @@
            layoutX="335" layoutY="230"
            styleClass="score-board"/>
 
+    <Label fx:id="speedLabel"
+           text="Speed: 400ms"
+           layoutX="335"
+           layoutY="280"
+           styleClass="score-board"/>
 
-    <BorderPane layoutX="330" layoutY="280" styleClass="next-box">
+    <BorderPane layoutX="330" layoutY="330" styleClass="next-box">
         <center>
             <GridPane fx:id="nextPreview"
                       hgap="0" vgap="0"
                       styleClass="next-preview-grid"/>
         </center>
     </BorderPane>
-
 
     <Group fx:id="groupNotification"
            layoutX="14" layoutY="203">

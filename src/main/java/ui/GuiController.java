@@ -57,8 +57,10 @@ public class GuiController implements Initializable {
 
     @FXML private Label scoreLabel;
     @FXML private Label linesLabel;
-
     @FXML private Label highScoreLabel;
+
+    @FXML private Label speedLabel;
+
     private int highestScore = 0;
 
     @FXML private GridPane nextPreview;
@@ -177,6 +179,11 @@ public class GuiController implements Initializable {
 
         timeLine.setCycleCount(Timeline.INDEFINITE);
         timeLine.play();
+
+        // ★ 初始化速度标签
+        if (speedLabel != null) {
+            speedLabel.setText("Speed: 400ms");
+        }
     }
 
     private Paint getFillColor(int i) {
@@ -293,6 +300,10 @@ public class GuiController implements Initializable {
         int base = 400;
         int reduce = (totalLines / 5) * 20;
         int newSpeed = Math.max(180, base - reduce);
+
+        if (speedLabel != null) {
+            speedLabel.setText("Speed: " + newSpeed + "ms");
+        }
 
         if (timeLine != null) {
             timeLine.stop();
