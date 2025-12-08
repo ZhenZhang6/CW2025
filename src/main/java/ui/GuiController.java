@@ -42,6 +42,11 @@ import javafx.util.Duration;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.Stop;
+
+
 public class GuiController implements Initializable {
 
     private static final int BRICK_SIZE = 28;
@@ -180,7 +185,6 @@ public class GuiController implements Initializable {
         timeLine.setCycleCount(Timeline.INDEFINITE);
         timeLine.play();
 
-        // ★ 初始化速度标签
         if (speedLabel != null) {
             speedLabel.setText("Speed: 400ms");
         }
@@ -196,6 +200,17 @@ public class GuiController implements Initializable {
             case 5 -> Color.RED;
             case 6 -> Color.BEIGE;
             case 7 -> Color.BURLYWOOD;
+            case 9 -> new LinearGradient(
+                    0, 0, 1, 1, true, CycleMethod.REPEAT,
+                    new Stop(0, Color.RED),
+                    new Stop(0.17, Color.ORANGE),
+                    new Stop(0.33, Color.YELLOW),
+                    new Stop(0.50, Color.GREEN),
+                    new Stop(0.67, Color.BLUE),
+                    new Stop(0.83, Color.INDIGO),
+                    new Stop(1.0, Color.VIOLET)
+            );
+
             default -> Color.WHITE;
         };
     }
@@ -207,17 +222,46 @@ public class GuiController implements Initializable {
     }
 
     public void refreshBrick(ViewData brick) {
-        if (!isPause.get()) {
-            brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * BRICK_SIZE);
-            brickPanel.setLayoutY(gamePanel.getLayoutY() + (brick.getyPosition() - HIDDEN_ROWS) * BRICK_SIZE);
 
-            for (int i = 0; i < brick.getBrickData().length; i++) {
-                for (int j = 0; j < brick.getBrickData()[i].length; j++) {
-                    setRectangleData(brick.getBrickData()[i][j], rectangles[i][j]);
+        if (isPause.get() || isGameOver.get()) {
+            return;
+        }
+
+        int newRows = brick.getBrickData().length;
+        int newCols = brick.getBrickData()[0].length;
+
+        if (rectangles == null
+                || rectangles.length != newRows
+                || rectangles[0].length != newCols) {
+
+            brickPanel.getChildren().clear();
+
+            rectangles = new Rectangle[newRows][newCols];
+
+            for (int i = 0; i < newRows; i++) {
+                for (int j = 0; j < newCols; j++) {
+
+                    Rectangle r = new Rectangle(BRICK_SIZE, BRICK_SIZE);
+                    r.setFill(getFillColor(brick.getBrickData()[i][j]));
+                    r.setArcHeight(9);
+                    r.setArcWidth(9);
+
+                    rectangles[i][j] = r;
+                    brickPanel.add(r, j, i);
                 }
             }
         }
+
+        brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * BRICK_SIZE);
+        brickPanel.setLayoutY(gamePanel.getLayoutY() + (brick.getyPosition() - HIDDEN_ROWS) * BRICK_SIZE);
+
+        for (int i = 0; i < newRows; i++) {
+            for (int j = 0; j < newCols; j++) {
+                setRectangleData(brick.getBrickData()[i][j], rectangles[i][j]);
+            }
+        }
     }
+
 
     public void refreshGameBackground(int[][] board) {
         for (int i = HIDDEN_ROWS; i < board.length; i++) {

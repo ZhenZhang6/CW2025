@@ -51,7 +51,6 @@ public class GameController implements InputEventListener {
             clearRow = board.clearRows();
             viewGuiController.updateLines(board.getScore().getTotalLines());
 
-            // 加速模式：每 5 行速度变快
             if (clearRow.getLinesRemoved() > 0) {
                 totalLines += clearRow.getLinesRemoved();
                 viewGuiController.updateFallSpeed(totalLines);
