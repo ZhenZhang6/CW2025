@@ -1,3 +1,8 @@
+/**
+ * Displays animated score notifications when rows are cleared.
+ * Used for simple visual feedback during gameplay.
+ */
+
 package ui;
 
 import javafx.animation.FadeTransition;

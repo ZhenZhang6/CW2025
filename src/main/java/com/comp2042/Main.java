@@ -1,34 +1,23 @@
 package com.comp2042;
 
-import controller.GameController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import ui.GuiController;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        URL location = getClass().getClassLoader().getResource("gameLayout.fxml");
-        ResourceBundle resources = null;
-        FXMLLoader fxmlLoader = new FXMLLoader(location, resources);
-        Parent root = fxmlLoader.load();
-        GuiController c = fxmlLoader.getController();
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("StartScreen.fxml"));
+        Parent root = loader.load();
 
         primaryStage.setTitle("TetrisJFX");
-        Scene scene = new Scene(root, 500, 700);
-        primaryStage.setScene(scene);
+        primaryStage.setScene(new Scene(root, 500, 700));
         primaryStage.show();
-        new GameController(c);
     }
-
 
     public static void main(String[] args) {
         launch(args);

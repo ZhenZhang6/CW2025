@@ -1,3 +1,9 @@
+/**
+ * Holds information about the next Tetris shape to be spawned.
+ * Stores the brick's matrix data and its initial spawn position.
+ * Refactored into the model package as part of the improved game architecture.
+ */
+
 package model;
 
 import logic.MatrixOperations;

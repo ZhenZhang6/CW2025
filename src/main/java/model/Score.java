@@ -1,3 +1,9 @@
+/**
+ * Tracks current score, total cleared lines and the persistent high score.
+ * High score is saved to a text file inside the user's home directory,
+ * ensuring portability without hardcoded file paths.
+ */
+
 package model;
 
 import javafx.beans.property.IntegerProperty;

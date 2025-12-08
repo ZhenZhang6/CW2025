@@ -1,3 +1,10 @@
+/**
+ * Handles all JavaFX UI updates, including board rendering,
+ * brick drawing, score display, notifications, next-piece preview,
+ * pause/resume toggling, and fall-speed adjustments.
+ * Acts as the visual layer of the MVC structure.
+ */
+
 package ui;
 
 import model.DownData;
@@ -7,6 +14,7 @@ import controller.EventSource;
 import controller.EventType;
 import controller.InputEventListener;
 import controller.MoveEvent;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
@@ -16,12 +24,14 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Reflection;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;

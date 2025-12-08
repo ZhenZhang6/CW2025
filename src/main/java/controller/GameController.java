@@ -1,3 +1,10 @@
+/**
+ * High-level controller connecting gameplay logic with the GUI.
+ * Handles user actions, updates score, manages fall speed,
+ * processes events from InputManager and triggers UI refreshes.
+ * Also manages game-over transitions and new game creation.
+ */
+
 package controller;
 
 import logic.Board;
@@ -17,7 +24,7 @@ public class GameController implements InputEventListener {
     private int totalLines = 0;
 
     public GameController(GuiController c) {
-        viewGuiController = c;
+        this.viewGuiController = c;
 
         board.getScore().loadHighScore();
         viewGuiController.updateHighestScore(board.getScore().getHighScore());
@@ -44,9 +51,9 @@ public class GameController implements InputEventListener {
             clearRow = board.clearRows();
             viewGuiController.updateLines(board.getScore().getTotalLines());
 
+            // 加速模式：每 5 行速度变快
             if (clearRow.getLinesRemoved() > 0) {
                 totalLines += clearRow.getLinesRemoved();
-
                 viewGuiController.updateFallSpeed(totalLines);
             }
 
@@ -62,7 +69,6 @@ public class GameController implements InputEventListener {
             boolean spawnConflict = board.createNewBrick();
 
             viewGuiController.refreshBrick(board.getViewData());
-
             viewGuiController.updateNextPiece(board.getNextShapeInfo());
 
             if (spawnConflict) {
@@ -112,9 +118,9 @@ public class GameController implements InputEventListener {
         totalLines = 0;
 
         viewGuiController.updateHighestScore(board.getScore().getHighScore());
-
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
         viewGuiController.updateNextPiece(board.getNextShapeInfo());
+
         viewGuiController.updateFallSpeed(0);
     }
 }
